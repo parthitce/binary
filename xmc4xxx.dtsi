@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2020 Linumiz
+ * Author: Parthiban Nallathambi <parthiban@linumiz.com>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <arm/armv7-m.dtsi>
+#include <dt-bindings/clock/xmc4_ccu.h>
+
+/ {
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cpu0: cpu@0 {
+			compatible = "arm,cortex-m4f";
+			reg = <0>;
+		};
+	};
+
+	/* TODO: Add psram1 & dsram2 to MEMORY layout of linker */
+	psram1: memory@10000000 {
+		compatible = "mmio-sram";
+	};
+
+	dsram1: memory@20000000 {
+		compatible = "mmio-sram";
+	};
+
+	dsram2: memory@30000000 {
+		compatible = "mmio-sram";
+	};
+
+	flash0: serial-flash@c000000 {
+		compatible = "serial-flash";
+	};
+
+	sysclk: system-clock {
+		compatible = "fixed-clock";
+		clock-frequency = <120000000>;
+		#clock-cells = <0>;
+	};
+
+	soc {
+		ccu: clock-controller@50004600 {
+			compatible = "infineon,xmc-ccu";
+			reg = <0x50004600 0x13c>;
+			label = "CCU";
+			#clock-cells = <2>;
+		};
+
+		usic0ch0: usic@40030000 {
+			reg = <0x40030000 0x1ff>;
+			clocks = <&ccu XMC_SCU_PERIPHERAL_CLOCK_USIC0 XMC_SCU_PERIPHERAL_RESET_USIC0>;
+			status = "disabled";
+		};
+
+		usic0ch1: usic@40030200 {
+			reg = <0x40030200 0x1ff>;
+			clocks = <&ccu XMC_SCU_PERIPHERAL_CLOCK_USIC0 XMC_SCU_PERIPHERAL_RESET_USIC0>;
+			status = "disabled";
+		};
+
+		usic1ch0: usic@48020000 {
+			reg = <0x48020000 0x1ff>;
+			clocks = <&ccu XMC_SCU_PERIPHERAL_CLOCK_USIC1 XMC_SCU_PERIPHERAL_RESET_USIC1>;
+			status = "disabled";
+		};
+
+		usic1ch1: usic@48020200 {
+			reg = <0x48020200 0x1ff>;
+			clocks = <&ccu XMC_SCU_PERIPHERAL_CLOCK_USIC1 XMC_SCU_PERIPHERAL_RESET_USIC1>;
+			status = "disabled";
+		};
+
+		usic2ch0: usic@48024000 {
+			reg = <0x48024000 0x1ff>;
+			clocks = <&ccu XMC_SCU_PERIPHERAL_CLOCK_USIC2 XMC_SCU_PERIPHERAL_RESET_USIC2>;
+			status = "disabled";
+		};
+
+		usic2ch1: usic@48024200 {
+			reg = <0x48024200 0x1ff>;
+			clocks = <&ccu XMC_SCU_PERIPHERAL_CLOCK_USIC2 XMC_SCU_PERIPHERAL_RESET_USIC2>;
+			status = "disabled";
+		};
+	};
+};
+
+&nvic {
+	arm,num-irq-priority-bits = <6>;
+};
